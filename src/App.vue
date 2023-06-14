@@ -24,7 +24,7 @@ export default {
     Logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
-
+      this.axios.post(this.$root.store.server_domain + "/Logout",)
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });

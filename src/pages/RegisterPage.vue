@@ -26,6 +26,46 @@
       </b-form-group>
 
       <b-form-group
+        id="input-group-first-name"
+        label-cols-sm="3"
+        label="FirstName:"
+        label-for="firstName"
+      >
+        <b-form-input
+          id="firstName"
+          v-model="$v.form.firstName.$model"
+          type="text"
+          :state="validateState('firstName')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.firstName.required">
+          firstname is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.firstName.alpha">
+          FirstName alpha
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-last-name"
+        label-cols-sm="3"
+        label="LastName:"
+        label-for="lastname"
+      >
+        <b-form-input
+          id="firstname"
+          v-model="$v.form.lastName.$model"
+          type="text"
+          :state="validateState('lastName')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.lastName.required">
+          lastname is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.lastName.alpha">
+          lastname alpha
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
         id="input-group-country"
         label-cols-sm="3"
         label="Country:"
@@ -87,6 +127,26 @@
           v-else-if="!$v.form.confirmedPassword.sameAsPassword"
         >
           The confirmed password is not equal to the original password
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-email"
+        label-cols-sm="3"
+        label="Email:"
+        label-for="email"
+      >
+        <b-form-input
+          id="email"
+          v-model="$v.form.email.$model"
+          type="email"
+          :state="validateState('email')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.email.required">
+          email is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-else-if="!$v.form.email.email">
+          Invalid email format
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -156,6 +216,14 @@ export default {
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha
       },
+      firstName: {
+        required,
+        alpha
+      },
+      lastName: {
+        required,
+        alpha
+      },
       country: {
         required
       },
@@ -166,6 +234,10 @@ export default {
       confirmedPassword: {
         required,
         sameAsPassword: sameAs("password")
+      },
+      email: {
+        required,
+        email
       }
     }
   },
@@ -182,12 +254,14 @@ export default {
     async Register() {
       try {
         const response = await this.axios.post(
-          // "https://test-for-3-2.herokuapp.com/user/Register",
           this.$root.store.server_domain + "/Register",
-
           {
             username: this.form.username,
-            password: this.form.password
+            password: this.form.password,
+            firstName: this.form.firstName,
+            lastName: this.form.lastName,
+            country: this.form.country,
+            email: this.form.email
           }
         );
         this.$router.push("/login");

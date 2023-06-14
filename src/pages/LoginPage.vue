@@ -65,6 +65,8 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+
+const ip_backend = "http://127.0.0.1:3000";
 export default {
   name: "Login",
   data() {
@@ -95,18 +97,14 @@ export default {
       try {
         
         const response = await this.axios.post(
-          // "https://test-for-3-2.herokuapp.com/user/Login",
-          this.$root.store.server_domain +"/Login",
-          // "http://132.72.65.211:80/Login",
-          // "http://132.73.84.100:80/Login",
-
-          {
+          this.$root.store.server_domain + "/Login",
+        {
             username: this.form.username,
             password: this.form.password
           }
         );
-        // console.log(response);
-        // this.$root.loggedIn = true;
+        console.log(response);
+        this.$root.loggedIn = true;
         console.log(this.$root.store.login);
         this.$root.store.login(this.form.username);
         this.$router.push("/");
