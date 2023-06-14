@@ -1,18 +1,20 @@
 <template>
-  <div class="container">
-    <h1 class="title">Main Page</h1>
-    <RecipePreviewList title="Randome Recipes" class="RandomRecipes center" />
-    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to vue this</router-link>
-    {{ !$root.store.username }}
-    <RecipePreviewList
-      title="Last Viewed Recipes"
-      :class="{
-        RandomRecipes: true,
-        blur: !$root.store.username,
-        center: true
-      }"
-      disabled
-    ></RecipePreviewList>
+  <div>
+    <div class="container">
+      <h1 class="title">Main Page</h1>
+      <RandomRecipes title="Random Recipes" class="RandomRecipes center" />
+      <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
+      <!-- {{ !$root.store.username }} -->
+      <WatchedRecipes
+        title="Last Viewed Recipes"
+        :class="{
+          RandomRecipes: true,
+          blur: !$root.store.username,
+          center: true
+        }"
+        disabled
+      ></WatchedRecipes>
+    </div>
     <!-- <div
       style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
     >
@@ -22,10 +24,13 @@
 </template>
 
 <script>
-import RecipePreviewList from "../components/RecipePreviewList";
+import RandomRecipes from "../components/RandomRecipes";
+import WatchedRecipes from "../components/WatchedRecipes";
+
 export default {
   components: {
-    RecipePreviewList
+    RandomRecipes,
+    WatchedRecipes
   }
 };
 </script>
