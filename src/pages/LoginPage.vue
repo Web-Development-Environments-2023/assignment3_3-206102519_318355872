@@ -102,7 +102,9 @@ export default {
             withCredentials: true,
             username: this.form.username,
             password: this.form.password
-          }
+            
+          },
+          
         );
         console.log(response);
         this.$root.loggedIn = true;
