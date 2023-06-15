@@ -16,6 +16,8 @@ import Vuelidate from "vuelidate";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import {
+  BootstrapVue,
+  IconsPlugin,
   FormGroupPlugin,
   FormPlugin,
   FormInputPlugin,
@@ -28,6 +30,8 @@ import {
   LayoutPlugin,
 } from "bootstrap-vue";
 [
+  BootstrapVue,
+  IconsPlugin,
   FormGroupPlugin,
   FormPlugin,
   FormInputPlugin,
