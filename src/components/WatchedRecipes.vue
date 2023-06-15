@@ -37,7 +37,8 @@ export default {
     async updateRecipes() {
       try {
         const response = await this.axios.get(
-          this.$root.store.server_domain + "/users/RecentThreeWatched", {withCredentials: true}
+          this.$root.store.server_domain + "/users/RecentThreeWatched",
+          {withCredentials: true}
         );
 
         console.log(response);
