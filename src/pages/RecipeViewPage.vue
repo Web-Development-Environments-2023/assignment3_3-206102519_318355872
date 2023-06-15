@@ -10,15 +10,22 @@
           <div class="wrapped">
             <div class="mb-3">
               <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
+              <div>Likes: {{ recipe.popularity }} likes</div>
+              <div> Servings: {{recipe.servings}} </div> 
+              <div v-if="recipe.vegan">vegan:{{recipe.vegan}}</div>
+              <div v-if="recipe.vegetarian">vegetarian:{{recipe.vegetarian}}</div>
+              <div v-if="recipe.glutenFree">glutenFree:{{recipe.glutenFree}}</div>
+
+
+
             </div>
             Ingredients:
             <ul>
               <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
+                v-for="(r,index) in recipe.extendedIngredients"
+                :key=" '_' +index"
               >
-                {{ r.original }}
+                {{ r }}
               </li>
             </ul>
           </div>
@@ -26,7 +33,8 @@
             Instructions:
             <ol>
               <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
+                {{ s.description }}
+                
               </li>
             </ol>
           </div>
@@ -51,15 +59,13 @@ export default {
   async created() {
     try {
       let response;
-      // response = this.$route.params.response;
+      response = this.$route.params.response;
 
       try {
+        let id_param=this.$route.params.recipeId;
         response = await this.axios.get(
           // "https://test-for-3-2.herokuapp.com/recipes/info",
-          this.$root.store.server_domain + "/recipes/info",
-          {
-            params: { id: this.$route.params.recipeId }
-          }
+          this.$root.store.server_domain + "/recipes/"+id_param
         );
 
         // console.log("response.status", response.status);
@@ -74,28 +80,39 @@ export default {
         analyzedInstructions,
         instructions,
         extendedIngredients,
-        aggregateLikes,
+        popularity,
         readyInMinutes,
         image,
-        title
+        title,
+        servings,
+        vegan,
+        vegetarian,
+        glutenFree
       } = response.data.recipe;
 
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
+      let _instructions = [];
+        // .map((fstep) => {
+        //   fstep.steps[0].step = fstep.name + fstep.steps[0].step;
+        //   return fstep.steps;
+        // })
+        // .reduce((a, b) => [...a, ...b], []);
+      for(let i=0; i<analyzedInstructions.length; i++){
+        _instructions.push(analyzedInstructions[i]);
+      }
 
       let _recipe = {
         instructions,
         _instructions,
         analyzedInstructions,
         extendedIngredients,
-        aggregateLikes,
+        popularity,
         readyInMinutes,
         image,
-        title
+        title,
+        servings,
+        vegan,
+        vegetarian,
+        glutenFree
       };
 
       this.recipe = _recipe;
