@@ -29,7 +29,7 @@
         <b-row id="waiting_animation" md="6" class="mb-3 d-flex justify-content-center" :class="{ hidden: isHidden, reveal: !isHidden }" :style="{ display: displayStyle }" >
           <b-icon icon="arrow-clockwise" animation="spin" font-scale="10" :style="{ display: displayStyle } "></b-icon>
         </b-row>
-        <b-row v-if="chunkedRecipes.length > 0">
+        <b-row v-if="chunkedRecipes.length > 0 ">
           <b-row v-for="(row, rowIndex) in chunkedRecipes" :key="rowIndex">
             <b-col v-for="recipe in row" :key="recipe.id">
               <RecipePreview class="recipePreview" :recipe="recipe" />
@@ -54,6 +54,8 @@ export default {
   },
   data() {
     return {
+      SearchWasClicked: false,
+      lastQuery: "",
       isHidden: true,
       displayStyle: 'none',
       query: "",
@@ -74,8 +76,14 @@ export default {
       }
     },
     chunkedRecipes() {
+      if (!this.SearchWasClicked) {
+        return this.$root.store.LastSearchRecipes
+      }
       // Split recipes into chunks of size 5
-      return this.recipes.reduce((result, item, index) => {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.SearchWasClicked = false;
+      let chunk_back;
+      chunk_back = this.recipes.reduce((result, item, index) => {
         const chunkIndex = Math.floor(index / 3);
         if (!result[chunkIndex]) {
           result[chunkIndex] = [];
@@ -83,6 +91,13 @@ export default {
         result[chunkIndex].push(item);
         return result;
       }, []);
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      if (chunk_back.length > 0)
+      {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.$root.store.LastSearchRecipes = chunk_back;
+      }
+      return chunk_back
     }
   },
   methods: {
@@ -100,7 +115,8 @@ export default {
     async SearchRecipes(query,number) {
       this.showWatingAnimation()
       try {
-        if (this.query !== "" && this.query !== undefined) {
+        if (this.query !== "" && this.query !== undefined && this.query!== this.lastQuery) {
+          this.lastQuery = this.query;
           const response = await this.axios.get(
             `${this.$root.store.server_domain}/recipes/search?query=${encodeURIComponent(this.query)}&number=${encodeURIComponent(this.number)}`,
           );
@@ -109,6 +125,7 @@ export default {
           this.recipes = [];
           this.hideWatingAnimation()
           this.hasResponse = true;
+          this.SearchWasClicked = true;
           this.recipes.push(...recipes);
           console.log(this.recipes);
         }
