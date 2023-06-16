@@ -5,15 +5,9 @@
       <RandomRecipes title="Random Recipes" class="RandomRecipes center" />
       <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
       <!-- {{ !$root.store.username }} -->
-      <WatchedRecipes
-        title="Last Viewed Recipes"
-        :class="{
-          RandomRecipes: true,
-          blur: !$root.store.username,
-          center: true
-        }"
-        disabled
-      ></WatchedRecipes>
+      <div v-if="$root.store.username">
+        <WatchedRecipes title="Last Viewed Recipes"></WatchedRecipes>
+      </div>
     </div>
     <!-- <div
       style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
