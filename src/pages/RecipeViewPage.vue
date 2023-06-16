@@ -1,4 +1,5 @@
 <template>
+<div class="background">
   <div class="container">
     <div v-if="recipe">
       <div class="recipe-header mt-3 mb-4">
@@ -14,12 +15,14 @@
               <div> Servings: {{recipe.servings}} </div> 
               <div v-if="recipe.vegan">vegan:{{recipe.vegan}}</div>
               <div v-if="recipe.vegetarian">vegetarian:{{recipe.vegetarian}}</div>
-              <div v-if="recipe.glutenFree">glutenFree:{{recipe.glutenFree}}</div>
+              <div v-if="recipe.glutenFree">glutenFree</div>
+              
 
 
 
             </div>
-            Ingredients:
+            <div class="ingredients">
+            <h2>Ingredients:</h2>
             <ul>
               <li
                 v-for="(r,index) in recipe.extendedIngredients"
@@ -28,15 +31,18 @@
                 {{ r }}
               </li>
             </ul>
+            </div>
           </div>
           <div class="wrapped">
-            Instructions:
+            <div class="instructions">
+            <h2>Instructions:</h2>
             <ol>
               <li v-for="s in recipe._instructions" :key="s.number">
                 {{ s.description }}
                 
               </li>
             </ol>
+            </div>
           </div>
         </div>
       </div>
@@ -47,6 +53,7 @@
       > -->
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -136,7 +143,46 @@ export default {
   margin-right: auto;
   width: 50%;
 }
+
+
+.container {
+  max-width: 800px; /* Adjust the maximum width of the container to your preference */
+  padding: 20px;
+  background-color: #fff; /* Set the background color to white */
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a box shadow for a subtle effect */
+}
 /* .recipe-header{
 
 } */
+.ingredients {
+  margin-bottom: 20px;
+}
+.ingredients h2 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.instructions h2 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.instructions ol {
+  counter-reset: steps;
+  margin-left: 0;
+  padding-left: 20px;
+}
+
+.instructions li {
+  counter-increment: steps;
+  margin-bottom: 10px;
+  list-style-type: none;
+}
+.instructions li:before {
+  content: counter(steps);
+  color: #888;
+  margin-right: 5px;
+}
 </style>
