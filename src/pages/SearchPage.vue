@@ -92,11 +92,7 @@ export default {
         return result;
       }, []);
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      if (chunk_back.length > 0)
-      {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.$root.store.LastSearchRecipes = chunk_back;
-      }
+      this.$root.store.LastSearchRecipes = chunk_back;
       return chunk_back
     }
   },
@@ -113,9 +109,10 @@ export default {
       this.displayStyle = 'none'; // set display to 'none' to hide the element
     },
     async SearchRecipes(query,number) {
-      this.showWatingAnimation()
       try {
         if (this.query !== "" && this.query !== undefined && this.query!== this.lastQuery) {
+          this.showWatingAnimation()
+          this.hasResponse = false;
           this.lastQuery = this.query;
           const response = await this.axios.get(
             `${this.$root.store.server_domain}/recipes/search?query=${encodeURIComponent(this.query)}&number=${encodeURIComponent(this.number)}`,
