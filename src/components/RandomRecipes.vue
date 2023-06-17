@@ -38,6 +38,7 @@ export default {
       try {
         const response = await this.axios.get(
           this.$root.store.server_domain + "/recipes/main_page_3_random",
+          {withCredentials:true}
         );
 
         // console.log(response);
