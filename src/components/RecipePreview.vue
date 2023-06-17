@@ -13,6 +13,11 @@
       <ul class="recipe-overview">
         <li>{{ recipe.readyInMinutes}} minutes</li>
         <li>{{ recipe.popularity }} likes</li>
+        <li v-if="$root.store.username">{{ recipe.watched }} </li>
+        <li v-if="$root.store.username">{{ recipe.favorite }} </li>
+
+
+
       </ul>
     </div>
   </router-link>
