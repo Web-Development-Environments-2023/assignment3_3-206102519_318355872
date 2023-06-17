@@ -1,13 +1,13 @@
 <template>
   <div class="container" >
     <h1 class="title">Search Page</h1>
-    <b-input-group class="mt-3 d-flex">
+    <b-input-group class="d-flex">
       <b-form-input id="search_input"
         v-model="query"
         placeholder="Enter your Search"
         @keyup.enter="SearchRecipes(query,number)"
       ></b-form-input>
-      <b-input-group-append>
+        <b-button variant="outline-primary" @click="toggleDialog">Filter</b-button>
         <b-dropdown :text="dropdownText" variant="outline-primary">
           <b-dropdown-item @click="selectAmount(5)">5</b-dropdown-item>
           <b-dropdown-item @click="selectAmount(10)">10</b-dropdown-item>
@@ -18,8 +18,41 @@
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
             </svg>
         </b-button>
-      </b-input-group-append>
     </b-input-group>
+    <div v-if="dialogOpen" class="filter-dialog">
+      <div class="filter-dialog-content">
+        <ul>
+          <br>
+          <b-row >
+            <b-col md="3">
+          <h5>Intolerance:</h5>
+          <li v-for="option in options_intolerances" :key="option.value">
+            <b-form-checkbox v-model="option.checked" @change="handleOptionChange(option, options_intolerances)" :disabled="!option.checked && checkedOption">
+              {{ option.label }}
+            </b-form-checkbox>
+          </li>
+            </b-col>
+            <b-col md="3">
+          <h5>Diet:</h5>
+          <li v-for="option in options_diet" :key="option.value">
+            <b-form-checkbox v-model="option.checked" @change="handleOptionChange(option, options_diet)" :disabled="!option.checked && checkedOption">
+              {{ option.label }}
+            </b-form-checkbox>
+          </li>
+              </b-col>
+            <b-col md="3">
+              <h5>Cuisine:</h5>
+              <li v-for="option in options_cuisine" :key="option.value">
+                <b-form-checkbox v-model="option.checked" @change="handleOptionChange(option, options_cuisine)" :disabled="!option.checked && checkedOption">
+                  {{ option.label }}
+                </b-form-checkbox>
+              </li>
+            </b-col>
+          </b-row>
+          <b-button @click="reset_options" variant="outline-primary" >Reset</b-button>
+        </ul>
+      </div>
+    </div>
     <div class="mt-3">
       <b-container>
         <h3>
@@ -62,17 +95,56 @@ export default {
       number: "5",
       selectedAmount: null,
       hasResponse: false,
-      recipes: []
-    };
+      recipes: [],
+      options_intolerances: [
+        { label: 'Dairy', value: 'Dairy', checked: false },
+        { label: 'Egg', value: 'Egg', checked: false },
+        { label: 'Gluten', value: 'Gluten', checked: false },
+        { label: 'Peanut', value: 'Peanut', checked: false },
+        { label: 'Seafood', value: 'Seafood', checked: false },
+        { label: 'Sesame', value: 'Sesame', checked: false },
+        { label: 'Shellfish', value: 'Shellfish', checked: false },
+        { label: 'Soy', value: 'Soy', checked: false },
+        { label: 'Sulfite', value: 'Sulfite', checked: false },
+        { label: 'Tree Nut', value: 'Tree Nut', checked: false },
+        { label: 'Wheat', value: 'Wheat', checked: false },
+      ],
+      options_diet: [
+        { label: 'Gluten Free', value: 'Gluten Free', checked: false },
+        { label: 'Ketogenic', value: 'Ketogenic', checked: false },
+        { label: 'Vegetarian', value: 'Vegetarian', checked: false },
+        { label: 'Lacto-Vegetarian', value: 'Lacto-Vegetarian', checked: false },
+        { label: 'Ovo-Vegetarian', value: 'Ovo-Vegetarian', checked: false },
+        { label: 'Vegan', value: 'Vegan', checked: false },
+        { label: 'Pescetarian', value: 'Pescetarian', checked: false },
+        { label: 'Paleo', value: 'Paleo', checked: false },
+        { label: 'Whole30', value: 'Whole30', checked: false }
+      ],
+      options_cuisine: [
+        { label: 'African', value: 'African', checked: false },
+        { label: 'American', value: 'American', checked: false },
+        { label: 'British', value: 'British', checked: false },
+        { label: 'Japanese', value: 'Japanese', checked: false },
+        { label: 'Jewish', value: 'Jewish', checked: false },
+        { label: 'Mexican', value: 'Mexican', checked: false },
+        { label: 'Spanish', value: 'Spanish', checked: false },
+        { label: 'Thai', value: 'Thai', checked: false },
+        { label: 'Vietnamese', value: 'Vietnamese', checked: false },
+        { label: 'Nordic', value: 'Nordic', checked: false },
+        { label: 'European', value: 'European', checked: false },
+        { label: 'French', value: 'French', checked: false }
+      ],
+      dialogOpen: false
+    }
   },
   computed: {
     dropdownText() {
       if (this.selectedAmount) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.number = this.selectedAmount;
-        return `Choose Amount (${this.selectedAmount})`;
+        return `Amount (${this.selectedAmount})`;
       } else {
-        return "Choose Amount (5)";
+        return "Amount (5)";
       }
     },
     chunkedRecipes() {
@@ -97,6 +169,54 @@ export default {
     }
   },
   methods: {
+    handleOptionChange(selectedOption, listOptions) {
+      // Loop through all options and uncheck them except for the selected option
+      listOptions.forEach((option) => {
+        if (option.value !== selectedOption.value) {
+          option.checked = false;
+        }
+      });
+    },
+    getCheckedValues() {
+      const checkedValues = {
+        intolerance: "",
+        diet: "",
+        cuisine: ""
+      };
+      // Loop through the first list of options
+      for (const option of this.options_intolerances) {
+        if (option.checked) {
+          checkedValues["intolerance"] = option.value;
+        }
+      }
+      // Loop through the second list of options
+      for (const option of this.options_diet) {
+        if (option.checked) {
+          checkedValues["diet"] = option.value;
+        }
+      }
+      // Loop through the third list of options
+      for (const option of this.options_cuisine) {
+        if (option.checked) {
+          checkedValues["cuisine"] = option.value;
+        }
+      }
+      return checkedValues;
+    },
+    reset_options() {
+      this.options_intolerances.forEach((option) => {
+        option.checked = false;
+      });
+      this.options_diet.forEach((option) => {
+        option.checked = false;
+      });
+      this.options_cuisine.forEach((option) => {
+        option.checked = false;
+      });
+    },
+    toggleDialog() {
+      this.dialogOpen = !this.dialogOpen;
+    },
     toggleAnimation() {
       this.isHidden = !this.isHidden;
     },
@@ -111,11 +231,20 @@ export default {
     async SearchRecipes(query,number) {
       try {
         if (this.query !== "" && this.query !== undefined && this.query!== this.lastQuery) {
+          if(this.dialogOpen)
+          {
+            this.dialogOpen = false;
+          }
           this.showWatingAnimation()
           this.hasResponse = false;
           this.lastQuery = this.query;
+          let filter = this.getCheckedValues();
           const response = await this.axios.get(
-            `${this.$root.store.server_domain}/recipes/search?query=${encodeURIComponent(this.query)}&number=${encodeURIComponent(this.number)}`,
+            `${this.$root.store.server_domain}/recipes/search?query=${encodeURIComponent(this.query)}
+            &number=${encodeURIComponent(this.number)}
+            &intolerance=${encodeURIComponent(filter.intolerance)}
+            &diet=${encodeURIComponent(filter.diet)}
+            &cuisine=${encodeURIComponent(filter.cuisine)}`
           );
           console.log(response);
           const recipes = response.data.recipes;
@@ -162,5 +291,11 @@ export default {
   width: 300px; /* Adjust the width as needed */
   height: auto; /* Adjust the height as needed */
   margin-bottom: 50px;
+}
+.input-group>.input-group-prepend {
+  flex: 0 0 30%;
+}
+.input-group .input-group-text {
+  width: 50%;
 }
 </style>
