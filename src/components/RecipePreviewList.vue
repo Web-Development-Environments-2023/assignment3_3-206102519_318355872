@@ -1,14 +1,10 @@
 <template>
   <b-container>
-    <h3>
-      {{ title }}:
-      <slot></slot>
-    </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
+    <b-col>
+      <b-row v-for="r in recipes" :key="r.id">
         <RecipePreview class="recipePreview" :recipe="r" />
-      </b-col>
-    </b-row>
+      </b-row>
+    </b-col>
   </b-container>
 </template>
 
@@ -23,38 +19,25 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    recipes:{
+      type:Array,
+      required:true
     }
-  },
-  data() {
-    return {
-      recipes: []
-    };
-  },
-  mounted() {
-    this.updateRecipes();
-  },
-  methods: {
-    async updateRecipes() {
-      try {
-        const response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/main_page_3_random",
-        );
 
-        // console.log(response);
-        const recipes = response.data.recipes;
-        this.recipes = [];
-        this.recipes.push(...recipes);
-        // console.log(this.recipes);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
+  },
+  
+  
 };
 </script>
 
 <style lang="scss" scoped>
 .container {
   min-height: 400px;
+}
+.recipePreview {
+  display: table-cell;
+  margin: 10px auto;
+  vertical-align: middle;
 }
 </style>

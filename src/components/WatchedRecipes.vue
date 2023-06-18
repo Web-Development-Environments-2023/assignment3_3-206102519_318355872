@@ -4,20 +4,16 @@
       {{ title }}:
       <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
-      </b-col>
-    </b-row>
+    <RecipePreviewList :recipes="recipes"></RecipePreviewList>
   </b-container>
 </template>
 
 <script>
-import RecipePreview from "./RecipePreview.vue";
+import RecipePreviewList from "./RecipePreviewList.vue";
 export default {
   name: "WatchedRecipes",
-   components: {
-    RecipePreview
+  components: {
+    RecipePreviewList
   },
   props: {
     title: {
@@ -38,14 +34,30 @@ export default {
       try {
         const response = await this.axios.get(
           this.$root.store.server_domain + "/users/RecentThreeWatched",
-          { withCredentials: true}
+          { withCredentials: true }
         );
 
-        console.log(response);
-        const recipes = response.data.recipes;
-        this.recipes = [];
-        this.recipes.push(...recipes);
-        // console.log(this.recipes);
+        let recipes = response.data.recipes;
+
+        for (let recipe of recipes) {
+          await this.updateWatchedFavorite(recipe);
+        }
+
+        this.recipes = recipes;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateWatchedFavorite(recipe) {
+      try {
+        const response = await this.axios.get(
+          this.$root.store.server_domain + "/users/CheckFavoriteWatched/" + recipe.id,
+          { withCredentials: true }
+        );
+
+        const watchedFavoriteData = response.data;
+        recipe.watched = watchedFavoriteData[recipe.id].watched;
+        recipe.favorite = watchedFavoriteData[recipe.id].favorite;
       } catch (error) {
         console.log(error);
       }
