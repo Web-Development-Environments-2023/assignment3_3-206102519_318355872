@@ -4,20 +4,17 @@
       {{ title }}:
       <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
-      </b-col>
-    </b-row>
+         <RecipePreviewList :recipes="recipes"></RecipePreviewList>
+         <b-button class="more" v-on:click="updateRecipes">More</b-button>
   </b-container>
 </template>
 
 <script>
-import RecipePreview from "./RecipePreview.vue";
+import RecipePreviewList from "./RecipePreviewList.vue";
 export default {
   name: "RandomRecipes",
   components: {
-    RecipePreview
+    RecipePreviewList
   },
   props: {
     title: {
@@ -71,4 +68,9 @@ export default {
 
 <style scoped>
 /* Your styles here */
+.discover-more{
+  display: table-cell;
+  margin: 10px 200px;
+  vertical-align: middle;
+}
 </style>
