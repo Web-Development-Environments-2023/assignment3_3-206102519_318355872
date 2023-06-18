@@ -98,13 +98,16 @@ export default {
         
         const response = await this.axios.post(
           this.$root.store.server_domain + "/Login",
+          
         {
+
             username: this.form.username,
             password: this.form.password
             
           },
           {withCredentials: true}
           
+
         );
         console.log(response);
         this.$root.loggedIn = true;
