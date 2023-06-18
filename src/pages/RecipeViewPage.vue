@@ -11,15 +11,23 @@
           <div class="wrapped">
             <div class="mb-3">
               <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.popularity }} likes</div>
+              <div> {{ recipe.popularity }} likes</div>
               <div> Servings: {{recipe.servings}} </div> 
-              <div v-if="recipe.vegan">vegan:{{recipe.vegan}}</div>
-              <div v-if="recipe.vegetarian">vegetarian:{{recipe.vegetarian}}</div>
-              <div v-if="recipe.glutenFree">glutenFree</div>
+              <div v-if="$root.store.username" class="favorite">
+                <b-avatar v-if="this.favorite===false" button icon="heart" variant="danger" :size="24"
+              v-b-popover.hover.top="'click to add the recipe to your favorites'"
+              v-on:click="addRecipeToFavorites"/>
+              <b-avatar v-else button icon="heart-fill" variant="danger"  :size="24"
+              v-b-popover.hover.top="'This recipe is in your favorites list'" />
+              </div>
+              <div class="specialthings">
+            <b-badge style="margin-top: 10px;" v-if="recipe.vegan" variant="success">Vegan</b-badge>
+            <b-badge style="margin-top: 10px;" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
+            <b-badge style="margin-top: 10px;" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
+              </div>
+
+
               
-
-
-
             </div>
             <div class="ingredients">
             <h2>Ingredients:</h2>
@@ -39,7 +47,6 @@
             <ol>
               <li v-for="s in recipe._instructions" :key="s.number">
                 {{ s.description }}
-                
               </li>
             </ol>
             </div>
@@ -60,16 +67,19 @@
 export default {
   data() {
     return {
-      recipe: null
+      recipe: null,
+      favorite:null
     };
   },
   async created() {
     try {
       let response;
       response = this.$route.params.response;
+      const id_param=this.$route.params.recipeId;
+      this.favorite=this.$route.params.favorite;
 
       try {
-        let id_param=this.$route.params.recipeId;
+        
         response = await this.axios.get(
           // "https://test-for-3-2.herokuapp.com/recipes/info",
           this.$root.store.server_domain + "/recipes/"+id_param
@@ -98,11 +108,7 @@ export default {
       } = response.data.recipe;
 
       let _instructions = [];
-        // .map((fstep) => {
-        //   fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-        //   return fstep.steps;
-        // })
-        // .reduce((a, b) => [...a, ...b], []);
+       
       for(let i=0; i<analyzedInstructions.length; i++){
         _instructions.push(analyzedInstructions[i]);
       }
@@ -123,10 +129,64 @@ export default {
       };
 
       this.recipe = _recipe;
-    } catch (error) {
+      if(this.$root.store.username){
+        try{
+        const response = await this.axios.post(
+          this.$root.store.server_domain + "/users/AddToWatched",
+          { recipeId: id_param },
+        { withCredentials: true }
+
+        );
+
+
+      }catch(error){
+        console.log(error);
+      if (error.status === 401) {
+        this.$root.store.logout();
+        this.$router.push("/").catch(() => {
+          this.$forceUpdate();
+        });
+      } else {
+        this.$router.push("*").catch(() => {
+          this.$forceUpdate();
+        });
+      }
+  }
+    }
+    }
+     catch (error) {
       console.log(error);
     }
-  }
+  },
+  methods: {
+  async addRecipeToFavorites() {
+    try {
+      const recipe_id = this.$route.params.recipeId;
+
+      const response = await this.axios.post(
+        this.$root.store.server_domain + "/users/favorites",
+        { recipeId: recipe_id },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        this.favorite = true; // Set favorite to true after successfully adding to favorites
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.status === 401) {
+        this.$root.store.logout();
+        this.$router.push("/").catch(() => {
+          this.$forceUpdate();
+        });
+      } else {
+        this.$router.push("*").catch(() => {
+          this.$forceUpdate();
+        });
+      }
+    }
+  },
+}
 };
 </script>
 
