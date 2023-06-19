@@ -2,10 +2,10 @@
   <b-card no-body class="RecipePreview zoom">
     <b-row no-gutters class="RecipeBody">
       <b-col>
-        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }">
+        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id,favorite:recipe.favorite } }">
            <b-card-img :src="recipe.image" alt="Image" class="RecipeImage"></b-card-img>
         </router-link>
-        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }">
+        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id,favorite:recipe.favorite } }">
            <b-card-title  class="RecipeTitle">{{recipe.title}}</b-card-title>
         </router-link>
         <div class="RecipeFooter">
