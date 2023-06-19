@@ -13,21 +13,18 @@
               <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
               <div> {{ recipe.popularity }} likes</div>
               <div> Servings: {{recipe.servings}} </div> 
-              <div v-if="$root.store.username" class="favorite">
-                <b-avatar v-if="this.favorite===false" button icon="heart" variant="danger" :size="24"
-              v-b-popover.hover.top="'click to add the recipe to your favorites'"
-              v-on:click="addRecipeToFavorites"/>
-              <b-avatar v-else button icon="heart-fill" variant="danger"  :size="24"
-              v-b-popover.hover.top="'This recipe is in your favorites list'" />
+              <div>
+              <watchedFavoriteData class="text-left" style=" margin-right: 25%"
+                                        :id="parseInt(this.recipe.id)"
+                                        :watched="this.recipe.watched"
+                                        :favorite="this.recipe.favorite">
+              </watchedFavoriteData>
               </div>
               <div class="specialthings">
             <b-badge style="margin-top: 10px;" v-if="recipe.vegan" variant="success">Vegan</b-badge>
             <b-badge style="margin-top: 10px;" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
             <b-badge style="margin-top: 10px;" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
               </div>
-
-
-              
             </div>
             <div class="ingredients">
             <h2>Ingredients:</h2>
@@ -64,7 +61,10 @@
 </template>
 
 <script>
+import watchedFavoriteData from "@/components/watchedFavoriteData.vue";
+
 export default {
+  components: { watchedFavoriteData },
   data() {
     return {
       recipe: null,

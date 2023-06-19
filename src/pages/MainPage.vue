@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="container">
-      <h1 class="title">Main Page</h1>
+      <h1 class="title text-center">Main Page</h1>
+      <br>
       <b-row>
         <b-col>
-          <RandomRecipes title="Random Recipes" />
+          <RandomRecipes class="text-center" title="Random Recipes" />
         </b-col>
-        <b-col v-if="!$root.store.username">
-            <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this
-            </router-link>
+        <b-col v-if="!$root.store.username" class="login-container">
+          <LoginPage/>
         </b-col>
         <b-col v-else>
-        <WatchedRecipes title="Last Viewed Recipes"></WatchedRecipes>
+        <WatchedRecipes class="text-center" title="Last Viewed Recipes"></WatchedRecipes>
         </b-col>
       </b-row>
       
@@ -30,11 +30,13 @@
 <script>
 import RandomRecipes from "../components/RandomRecipes";
 import WatchedRecipes from "../components/WatchedRecipes";
+import LoginPage from "../pages/LoginPage";
 
 export default {
   components: {
     RandomRecipes,
-    WatchedRecipes
+    WatchedRecipes,
+    LoginPage
   }
 };
 </script>
@@ -50,5 +52,11 @@ export default {
 ::v-deep .blur .recipe-preview {
   pointer-events: none;
   cursor: default;
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
 }
 </style>
