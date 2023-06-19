@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       recipe: null,
-      favorite:null
+      favorite:false
     };
   },
   async created() {
