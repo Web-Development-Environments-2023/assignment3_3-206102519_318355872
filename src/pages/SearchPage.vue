@@ -8,6 +8,10 @@
         @keyup.enter="SearchRecipes(query,number)"
       ></b-form-input>
         <b-button variant="outline-primary" @click="toggleDialog">Filter</b-button>
+      <b-dropdown :text="orderBy" variant="outline-primary">
+        <b-dropdown-item @click="orderBy('readyInMinutes')">5</b-dropdown-item>
+        <b-dropdown-item @click="orderBy('popularity')">5</b-dropdown-item>
+      </b-dropdown>
         <b-dropdown :text="dropdownText" variant="outline-primary">
           <b-dropdown-item @click="selectAmount(5)">5</b-dropdown-item>
           <b-dropdown-item @click="selectAmount(10)">10</b-dropdown-item>
@@ -134,7 +138,8 @@ export default {
         { label: 'European', value: 'European', checked: false },
         { label: 'French', value: 'French', checked: false }
       ],
-      dialogOpen: false
+      dialogOpen: false,
+      order_by_bool: false
     }
   },
   computed: {
@@ -148,10 +153,12 @@ export default {
       }
     },
     chunkedRecipes() {
-      if (!this.SearchWasClicked) {
+      if (!this.SearchWasClicked || !this.order_by_bool){
         return this.$root.store.LastSearchRecipes
       }
       // Split recipes into chunks of size 5
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.order_by_bool = false;
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.SearchWasClicked = false;
       let chunk_back;
@@ -169,6 +176,12 @@ export default {
     }
   },
   methods: {
+    orderBy(parameter){
+      let recipes = this.$root.store.LastSearchRecipes.flat()
+      recipes.sort((a, b) => {a.parameter - b.parameter})
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.order_by_bool = true;
+    },
     handleOptionChange(selectedOption, listOptions) {
       // Loop through all options and uncheck them except for the selected option
       listOptions.forEach((option) => {
