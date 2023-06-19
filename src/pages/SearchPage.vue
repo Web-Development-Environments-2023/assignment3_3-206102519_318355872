@@ -5,9 +5,13 @@
       <b-form-input id="search_input"
         v-model="query"
         placeholder="Enter your Search"
-        @keyup.enter="SearchRecipes(query,number)"
+        @keyup.enter="SearchRecipes(query,number)" class="w-25"
       ></b-form-input>
         <b-button variant="outline-primary" @click="toggleDialog">Filter</b-button>
+      <b-dropdown :text="orderBy" variant="outline-primary">
+        <b-dropdown-item @click="changeParameter('readyInMinutes')">readyInMinutes</b-dropdown-item>
+        <b-dropdown-item @click="changeParameter('popularity')">popularity</b-dropdown-item>
+      </b-dropdown>
         <b-dropdown :text="dropdownText" variant="outline-primary">
           <b-dropdown-item @click="selectAmount(5)">5</b-dropdown-item>
           <b-dropdown-item @click="selectAmount(10)">10</b-dropdown-item>
@@ -62,7 +66,7 @@
         <b-row id="waiting_animation" md="6" class="mb-3 d-flex justify-content-center" :class="{ hidden: isHidden, reveal: !isHidden }" :style="{ display: displayStyle }" >
           <b-icon icon="arrow-clockwise" animation="spin" font-scale="10" :style="{ display: displayStyle } "></b-icon>
         </b-row>
-        <b-row v-if="chunkedRecipes.length > 0 ">
+        <b-row v-if="chunkedRecipes.length > 0 && !order_by_bool">
           <b-row v-for="(row, rowIndex) in chunkedRecipes" :key="rowIndex">
             <b-col v-for="recipe in row" :key="recipe.id">
               <RecipePreview class="recipePreview" :recipe="recipe" />
@@ -134,7 +138,11 @@ export default {
         { label: 'European', value: 'European', checked: false },
         { label: 'French', value: 'French', checked: false }
       ],
-      dialogOpen: false
+      dialogOpen: false,
+      filter_change: false,
+      order_by_bool: false,
+      parameter: 'popularity',
+      amount_changed: false
     }
   },
   computed: {
@@ -142,19 +150,39 @@ export default {
       if (this.selectedAmount) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.number = this.selectedAmount;
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.amount_changed = true;
         return `Amount (${this.selectedAmount})`;
       } else {
         return "Amount (5)";
       }
     },
     chunkedRecipes() {
-      if (!this.SearchWasClicked) {
-        return this.$root.store.LastSearchRecipes
+      if (!this.order_by_bool){
+        if (!this.SearchWasClicked){
+          return this.$root.store.LastSearchRecipes
+        }
       }
       // Split recipes into chunks of size 5
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.order_by_bool = false;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.SearchWasClicked = false;
       let chunk_back;
+      if (this.recipes.length === 0) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.recipes = this.$root.store.LastSearchRecipes
+      };
+      if (this.parameter === 'popularity') {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.recipes = this.recipes.sort((a, b) =>  b[this.parameter] - a[this.parameter])
+
+      }
+      else {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.recipes = this.recipes.sort((a, b) =>  a[this.parameter] - b[this.parameter])
+
+      }
       chunk_back = this.recipes.reduce((result, item, index) => {
         const chunkIndex = Math.floor(index / 3);
         if (!result[chunkIndex]) {
@@ -166,9 +194,18 @@ export default {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.$root.store.LastSearchRecipes = chunk_back;
       return chunk_back
-    }
+    },
+    orderBy(){
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.order_by_bool = true;
+      return 'OrderBy: ' + this.parameter
+    },
   },
+
   methods: {
+    changeParameter(parameter){
+      this.parameter = parameter;
+    },
     handleOptionChange(selectedOption, listOptions) {
       // Loop through all options and uncheck them except for the selected option
       listOptions.forEach((option) => {
@@ -176,6 +213,7 @@ export default {
           option.checked = false;
         }
       });
+      this.filter_change = true;
     },
     getCheckedValues() {
       const checkedValues = {
@@ -213,6 +251,7 @@ export default {
       this.options_cuisine.forEach((option) => {
         option.checked = false;
       });
+      this.filter_change = true;
     },
     toggleDialog() {
       this.dialogOpen = !this.dialogOpen;
@@ -230,13 +269,15 @@ export default {
     },
     async SearchRecipes(query,number) {
       try {
-        if (this.query !== "" && this.query !== undefined && this.query!== this.lastQuery) {
+        if ((this.query !== "" && this.query !== undefined && this.query!== this.lastQuery)||(this.amount_changed)||(this.filter_change)) {
           if(this.dialogOpen)
           {
             this.dialogOpen = false;
           }
           this.showWatingAnimation()
           this.hasResponse = false;
+          this.filter_change = false;
+          this.amount_changed = false;
           this.lastQuery = this.query;
           let filter = this.getCheckedValues();
           const response = await this.axios.get(

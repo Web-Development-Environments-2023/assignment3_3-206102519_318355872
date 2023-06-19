@@ -5,7 +5,7 @@
       <slot></slot>
     </h3>
          <RecipePreviewList :recipes="recipes"></RecipePreviewList>
-         <b-button class="more" v-on:click="updateRecipes">More</b-button>
+         <b-button class="more align-items-center" variant="primary" v-on:click="updateRecipes">More</b-button>
   </b-container>
 </template>
 
@@ -75,5 +75,12 @@ export default {
   display: table-cell;
   margin: 10px 200px;
   vertical-align: middle;
+}
+.more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
+    margin-left: 44%;
 }
 </style>

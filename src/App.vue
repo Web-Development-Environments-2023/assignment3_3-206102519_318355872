@@ -14,20 +14,20 @@
             <router-link :to="{ name: 'register' }">Register</router-link>
           </span>
           <span v-else class="nav-item">
-            <b-button @click="showModal">Add Recipe</b-button>
+            <b-button variant="primary" @click="showModal">Add Recipe</b-button>
             <b-nav-item-dropdown :text="$root.store.username" left>
               <b-dropdown-item href="#"><router-link :to="{ name: 'my_favorite_recipes' }">My favorite recipes</router-link></b-dropdown-item>
               <b-dropdown-item href="#"><router-link :to="{ name: 'my_recipes' }">My recipes</router-link></b-dropdown-item>
               <b-dropdown-item href="#"><router-link :to="{ name: 'my_family_recipes' }">My family recipes</router-link></b-dropdown-item>
             </b-nav-item-dropdown>
-            <button class="button-4" @click="Logout">Logout</button>
+            <b-button class="button-4" variant="primary"  @click="Logout">Logout</b-button>
           </span>
         </b-navbar-nav>
       </b-navbar>
       <router-view />
     </div>
     <div>
-      <b-modal class="add_recipe" ref="my-modal" hide-footer title="Add Personal Recipe" size="lg">
+      <b-modal class="add_recipe"  ref="my-modal" hide-footer title="Add Personal Recipe" size="lg">
         <b-form-group  label-cols="4" label-cols-lg="2" label-size="me" label="Title" label-for="Title" >
           <b-form-input v-model="recipe.title"  size="me" required placeholder="Enter the Name of the recipe">
           </b-form-input >
@@ -68,10 +68,10 @@
         </b-form-group>
         <b-row class="mt-3 justify-content-center">
           <b-col cols="1">
-            <b-button type="submit" @click="addRecipe">Add</b-button>
+            <b-button variant="primary" type="submit" @click="addRecipe">Add</b-button>
           </b-col>
           <b-col cols="1">
-            <b-button @click="closeModal">Cancel</b-button>
+            <b-button variant="primary" @click="closeModal">Cancel</b-button>
           </b-col>
         </b-row>
       </b-modal>

@@ -20,6 +20,12 @@
     <b>Founders:</b>
     <br><u>Itamar Zafran - ID:</u> 318355812 <u>Mail:</u> Zafran@post.bgu.ac.il
     <br><u>Nitay Yakoby   - ID:</u> 206102519 <u>Mail:</u> Yakoby@post.bgu.ac.il
+
+    <br><b>Last Projects GitHub:</b>
+    <ul>
+      <li><a href="https://github.com/Web-Development-Environments-2023/assignment3_2-318355872_206102519" target="_blank" rel="noopener noreferrer">Assignment 3.2</a></li>
+      <li><a href="https://github.com/Web-Development-Environments-2023/assignment3_3-206102519_318355872" target="_blank" rel="noopener noreferrer">Assignment 3.3</a></li>
+    </ul>
   </div>
 </template>
 <style>

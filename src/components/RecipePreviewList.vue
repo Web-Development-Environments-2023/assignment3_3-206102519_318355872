@@ -36,6 +36,8 @@ export default {
   min-height: 400px;
 }
 .recipePreview {
+  width: 60%;
+  height: 100%;
   display: table-cell;
   margin: 10px auto;
   vertical-align: middle;

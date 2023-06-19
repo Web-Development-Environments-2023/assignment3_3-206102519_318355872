@@ -1,13 +1,19 @@
 <template>
-    <div>
-        <b-avatar v-if="watched===true" button icon="check" variant="success" :size="24"
+    <a v-if="$root.store.username">
+        <b-icon-check-circle v-if="watched===false" class="b-icon-data zoom zoom-icon"
+                  v-b-popover.hover.top="'You not watched this recipe'"/>
+        <b-icon-check-circle-fill v-if="watched===true" class="b-icon-data zoom zoom-icon" style="color:#3de18c"
              v-b-popover.hover.top="'You had watched this recipe '"/>
-        <b-avatar v-if="favorite===false" button icon="heart" variant="danger" :size="24"
+        <b-icon-hand-thumbs-up v-if="favorite===false" class="b-icon-data zoom zoom-icon"
               v-b-popover.hover.top="'click to add the recipe to your favorites'"
               v-on:click="addRecipeToFavorites"/>
-        <b-avatar v-if="favorite===true" button icon="heart-fill" variant="danger"  :size="24"
+        <b-icon-hand-thumbs-up class="b-icon-data zoom zoom-icon" style=" color: rgb(61, 225, 140); text-shadow: rgb(220, 219, 219) 10px 0px 13.3px;" v-if="favorite===true"
               v-b-popover.hover.top="'This recipe is in your favorites list'" />
-    </div>
+    </a>
+    <a v-else>
+        <b-icon-check-circle class="b-icon-data zoom zoom-icon" v-b-popover.hover.top="'You need to connect to see if you watched this recipe'"></b-icon-check-circle>
+        <b-icon-hand-thumbs-up class="b-icon-data zoom zoom-icon" v-b-popover.hover.top="'You need to connect to see if you like this recipe'"></b-icon-hand-thumbs-up>
+    </a>
 </template>
 
 <script>
@@ -55,3 +61,24 @@ export default {
 
 };
 </script>
+<style>
+.b-icon-data
+{
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+.zoom-effect .zoom-icon {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.zoom-effect:hover .zoom-icon {
+    transform: scale(1.2); /* Increase the scale value for a stronger zoom effect */
+    z-index: 3;
+}
+
+</style>
