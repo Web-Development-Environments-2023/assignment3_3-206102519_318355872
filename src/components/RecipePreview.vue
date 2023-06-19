@@ -1,5 +1,5 @@
 <template>
-  <b-card no-body class="RecipePreview">
+  <b-card no-body class="RecipePreview zoom">
     <b-row no-gutters class="RecipeBody">
       <b-col>
         <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id,favorite:recipe.favorite } }">
@@ -73,18 +73,22 @@ export default {
 <style scoped>
 .RecipePreview {
   padding-bottom: 10px;
-  width: 320px;
+  width: 100%;
   height: 330px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  margin-bottom: 10px;
 
 }
 
-.RecipePreview .RecipeBody .RecipeImage {
-  width: 317px; 
-  height: 180px; 
+.RecipeBody .RecipeImage {
+  border-radius: 15px;
   object-fit: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;
-  background-size: cover;
+  background-size: cover; /* Adjust to "contain" if needed */
+  background-position: center;
 }
 
 .RecipePreview .RecipeFooter {
@@ -101,6 +105,16 @@ export default {
   word-wrap: break-word;
   hyphens: auto;
 }
-
+.zoom {
+    transition: transform .2s; /* Animation */
+    transform-origin: center;
+}
+.zoom:hover {
+    z-index: 999999;
+    transform: scale(1.3); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+.black-white {
+    color: #000;
+}
 
 </style>
