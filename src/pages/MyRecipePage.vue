@@ -9,7 +9,7 @@
         <b-row v-if="chunkedRecipes.length > 0 ">
           <b-row v-for="(row, rowIndex) in chunkedRecipes" :key="rowIndex">
             <b-col v-for="recipe in row" :key="recipe.id">
-              <RecipePreview class="recipePreview" :recipe="recipe" />
+              <RecipePreview class="recipePreview" :recipe="recipe" name="MyRecipePageView" />
             </b-col>
           </b-row>
         </b-row>
