@@ -10,14 +10,17 @@
         <div class="wrapper">
           <div class="wrapped">
             <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
+              <div>
+                <b-icon v-if="recipe.readyInMinutes" icon="clock" style="width: 15px; height: 15px;"></b-icon>
+            <a style="margin-right: 10px; margin-bottom: 20px;">  {{ recipe.readyInMinutes }} minutes</a>
+              </div>
               <div> {{ recipe.popularity }} likes</div>
               <div> Servings: {{recipe.servings}} </div> 
               <div>
               <watchedFavoriteData class="text-left" style=" margin-right: 25%"
                                         :id="parseInt(this.recipe.id)"
-                                        :watched="this.recipe.watched"
-                                        :favorite="this.recipe.favorite">
+                                        :watched="this.watched"
+                                        :favorite="this.favorite">
               </watchedFavoriteData>
               </div>
               <div class="specialthings">
@@ -68,7 +71,8 @@ export default {
   data() {
     return {
       recipe: null,
-      favorite:false
+      favorite:false,
+      watched:false
     };
   },
   async created() {
@@ -76,7 +80,7 @@ export default {
       let response;
       response = this.$route.params.response;
       const id_param=this.$route.params.recipeId;
-      this.favorite=this.$route.params.favorite;
+      // const favorite=this.$route.params.favorite;
 
       try {
         
@@ -86,14 +90,15 @@ export default {
         );
 
         // console.log("response.status", response.status);
-        if (response.status !== 200) this.$router.replace("/NotFound");
+        // if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
         console.log("error.response.status", error.response.status);
-        this.$router.replace("/NotFound");
+        // this.$router.replace("/NotFound");
         return;
       }
 
       let {
+        id,
         analyzedInstructions,
         instructions,
         extendedIngredients,
@@ -114,6 +119,7 @@ export default {
       }
 
       let _recipe = {
+        id,
         instructions,
         _instructions,
         analyzedInstructions,
@@ -157,36 +163,23 @@ export default {
      catch (error) {
       console.log(error);
     }
-  },
-  methods: {
-  async addRecipeToFavorites() {
-    try {
-      const recipe_id = this.$route.params.recipeId;
-
-      const response = await this.axios.post(
-        this.$root.store.server_domain + "/users/favorites",
-        { recipeId: recipe_id },
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        this.favorite = true; // Set favorite to true after successfully adding to favorites
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.status === 401) {
-        this.$root.store.logout();
-        this.$router.push("/").catch(() => {
-          this.$forceUpdate();
-        });
-      } else {
-        this.$router.push("*").catch(() => {
-          this.$forceUpdate();
-        });
+    if(this.$root.store.username){
+      try {
+        const id_param=this.$route.params.recipeId;
+        const response = await this.axios.get(
+          this.$root.store.server_domain + "/users/CheckFavoriteWatched/" + id_param,
+          { withCredentials: true }
+        );
+        const watchedFavoriteData = response.data;
+        this.favorite = watchedFavoriteData[id_param].favorite;
+        this.watched = watchedFavoriteData[id_param].watched;
+      } catch (error) {
+        console.log(error);
       }
     }
   },
-}
+  
+  
 };
 </script>
 
