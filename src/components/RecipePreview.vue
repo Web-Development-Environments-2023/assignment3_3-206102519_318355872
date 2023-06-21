@@ -2,10 +2,17 @@
   <b-card no-body class="RecipePreview zoom">
     <b-row no-gutters class="RecipeBody">
       <b-col>
-        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id,favorite:recipe.favorite } }">
-           <b-card-img :src="recipe.image" alt="Image" class="RecipeImage"></b-card-img>
+
+        <router-link :to="{ name: name, params: { recipeId: recipe.id,favorite:recipe.favorite } }">
+          <div v-if="this.name==='MyfamilyRecipePageView'">
+          <b-card-img :src="require('@/assets/' + recipe.image)" alt="Image" class="RecipeImage" style="width: 200px; height: 200px;">
+          </b-card-img>
+          </div>
+          <div v-else>
+            <b-card-img :src="recipe.image" alt="Image" class="RecipeImage" style="width: 200px; height: 200px;"></b-card-img>
+          </div>
         </router-link>
-        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id,favorite:recipe.favorite } }">
+        <router-link :to="{ name: name, params: { recipeId: recipe.id,favorite:recipe.favorite } }">
            <b-card-title  class="RecipeTitle">{{shortenTitle(recipe.title)}}</b-card-title>
         </router-link>
         <div class="RecipeFooter">
@@ -63,6 +70,11 @@ export default {
       type: Object,
       required: true
     },
+    name:{
+      type:String,
+      required:true
+
+    },
     
   },
 }
@@ -88,6 +100,7 @@ export default {
   margin-bottom: 10px;
 
 }
+
 
 .RecipeBody .RecipeImage {
   border-radius: 15px;

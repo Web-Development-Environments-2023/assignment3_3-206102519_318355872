@@ -2,7 +2,7 @@
   <b-container>
     <b-col>
       <b-row v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
+        <RecipePreview class="recipePreview" :recipe="r" name="recipe" />
       </b-row>
     </b-col>
   </b-container>
