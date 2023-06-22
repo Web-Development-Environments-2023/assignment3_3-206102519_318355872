@@ -46,11 +46,11 @@ export default {
   components: {
    watchedFavoriteData
   },
-  mounted() {
-    this.axios.get(this.recipe.image).then((i) => {
-      this.image_load = true;
-    });
-  },
+  // mounted() {
+  //   this.axios.get(this.recipe.image).then((i) => {
+  //     this.image_load = true;
+  //   });
+  // },
   methods: {
     shortenTitle(title) {
       if (title.length <= 30) {
