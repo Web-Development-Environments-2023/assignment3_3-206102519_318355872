@@ -74,7 +74,7 @@ export default {
 
         let recipes = response.data["result"];
         for (let recipe of recipes) {
-          if (recipe.id === id_param) {
+          if (recipe.id === Number(id_param)) {
             this.recipe = recipe;
           }
         }

@@ -16,10 +16,10 @@ export default {
     RecipePreview
   },
   props: {
-    title: {
-      type: String,
-      required: true
-    },
+    // title: {
+    //   type: String,
+    //   required: true
+    // },
     recipes:{
       type:Array,
       required:true
