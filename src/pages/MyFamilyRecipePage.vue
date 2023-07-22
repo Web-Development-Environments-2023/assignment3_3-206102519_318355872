@@ -9,7 +9,7 @@
         <b-row v-if="chunkedRecipes.length > 0 ">
           <b-row v-for="(row, rowIndex) in chunkedRecipes" :key="rowIndex">
             <b-col v-for="recipe in row" :key="recipe.id">
-              <RecipePreview class="recipePreview" :recipe="recipe" name="MyfamilyRecipePageView"/>
+              <RecipePreview class="recipePreview" :recipe="recipe" name="MyFamilyRecipePageView"/>
             </b-col>
           </b-row>
         </b-row>
@@ -74,11 +74,11 @@ export default {
             {withCredentials:true}
           );
           console.log(response);
-          const recipes = response.data['result'];
+          const recipes = response.data.result;
           this.recipes = [];
           this.hideWatingAnimation()
           this.hasResponse = true;
-          this.recipes.push(...recipes);
+          this.recipes = recipes;
           console.log(this.recipes);
       } catch (error) {
         console.log(error);
@@ -110,10 +110,11 @@ export default {
 
 }
 .recipePreview {
+  display: block;
   margin-left: 40px;
   align-items: center;
-  width: 300px; /* Adjust the width as needed */
-  height: auto; /* Adjust the height as needed */
+  width: 300px;
+  height: 300px;
   margin-bottom: 50px;
 }
 </style>

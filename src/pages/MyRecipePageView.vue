@@ -3,13 +3,13 @@
     <div class="container">
       <div v-if="recipe">
         <div class="recipe-header mt-3 mb-4">
-          <h1 class="recipe-header">{{ recipe.title }}</h1>
-          <img :src="recipe.image" class="center" style="width: 500px; height: 400px;" />
+          <h1 style="text-align: center">{{ recipe.title }}</h1>
+          <img v-if="recipe.image" :src="recipe.image" class="center img-page"/>
         </div>
         <div class="specialthings">
-          <b-badge style="margin-top: 10px;" v-if="recipe.vegan" variant="success">Vegan</b-badge>
-          <b-badge style="margin-top: 10px;" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
-          <b-badge style="margin-top: 10px;" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
+          <b-badge style="margin-top: 10px; margin-right: 5px" v-if="recipe.vegan" variant="success">Vegan</b-badge>
+          <b-badge style="margin-top: 10px;margin-right: 5px" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
+          <b-badge style="margin-top: 10px;margin-right: 5px" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
         </div>
         <div class="regular-details">
             <b-icon v-if="this.recipe.readyInMinutes" icon="clock" style="width: 15px; height: 15px;"></b-icon>
@@ -57,7 +57,6 @@ export default {
 
       try {
         response = await this.axios.get(
-          // "https://test-for-3-2.herokuapp.com/recipes/info",
           this.$root.store.server_domain + "/users/GetfullPersonalRecipes",
           { withCredentials: true }
         );
@@ -125,11 +124,11 @@ export default {
 }
 
 .container {
-  max-width: 800px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .center {
@@ -155,5 +154,11 @@ export default {
   align-items: center;
   /* text-align: left; */
   margin-bottom: 20px;
+}
+
+#recipe_image{
+    width:60%;
+    border-radius:5%;
+
 }
 </style>

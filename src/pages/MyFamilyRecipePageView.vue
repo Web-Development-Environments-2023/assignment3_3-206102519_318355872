@@ -3,28 +3,26 @@
     <div class="container">
       <div v-if="recipe">
         <div class="recipe-header mt-3 mb-4">
-          <h1 class="recipe-header">{{ recipe.title }}</h1>
-          <img :src="require('@/assets/' + recipe.image)" class="center" style="width: 500px; height: 400px;" />
+          <h1 style="text-align: center">{{ recipe.title }}</h1>
+          <img v-if="recipe.image" :src="recipe.image" class="center img-page"/>
         </div>
         <div class="specialthings">
-          <b-badge style="margin-top: 10px;" v-if="recipe.vegan" variant="success">Vegan</b-badge>
-          <b-badge style="margin-top: 10px;" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
-          <b-badge style="margin-top: 10px;" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
+          <b-badge style="margin-top: 10px; margin-right: 5px" v-if="recipe.vegan" variant="success">Vegan</b-badge>
+          <b-badge style="margin-top: 10px; margin-right: 5px" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
+          <b-badge style="margin-top: 10px; margin-right: 5px" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
         </div>
         <div class="regular-details">
-          <b-icon v-if="this.recipe.readyInMinutes" icon="clock" style="width: 15px; height: 15px;"></b-icon>
+          <b-icon v-if="this.recipe.readyInMinutes" icon="clock" style="width: 15px; height: 15px; margin-right: 10px"></b-icon>
           <a style="margin-right: 10px; margin-bottom: 20px;">{{ this.recipe.readyInMinutes }} minutes</a>
           <br/>
           <a>Servings: {{ this.recipe.servings }}</a>
           <br/>
-          <a >Who make it?<br/> {{this.recipe.chef}}</a>
+          <br>
+          <a >The Recipe Owner:  <br><a style="font-size: 40px">{{GetEmojiCreated}}</a>{{this.recipe.chef}}</a>
         <br/>
-        <a >When we make it?<br/> {{this.recipe.occasion}}</a>
+        <a >When Do We Make It?<br/><a style="font-size: 40px">{{GetEmojiOccasion}}</a> {{this.recipe.occasion}}</a>
         <br/>
-        <a >About<br/> {{this.recipe.about}}</a>
-
-
-
+        <a >The Story Behind The Recipe: <br/><a style="font-size: 40px">📒</a> {{this.recipe.about}}</a>
         </div>
         <div class="recipe-body">
           <div class="wrapper">
@@ -54,6 +52,30 @@
 
 <script>
 export default {
+  computed:{
+    // eslint-disable-next-line vue/return-in-computed-property
+    GetEmojiCreated(){
+      if (this.recipe.chef.toLowerCase() === "grandmother")
+      {
+        return "🧓🏻"
+
+      }
+      return ""
+    },
+    // eslint-disable-next-line vue/return-in-computed-property
+    GetEmojiOccasion(){
+      if (this.recipe.occasion.toLowerCase() === "shavuot")
+      {
+        return "🌾"
+      }
+      if (this.recipe.occasion.toLowerCase() === "pesach")
+      {
+        return "🫓"
+      }
+      return ""
+    },
+
+  },
   data() {
     return {
       recipe: null,
@@ -67,18 +89,11 @@ export default {
 
       try {
         response = await this.axios.get(
-          // "https://test-for-3-2.herokuapp.com/recipes/info",
-          this.$root.store.server_domain + "/users/GetFamilyRecipes",
+            `${this.$root.store.server_domain}/users/GetFamilyRecipeFullView/${encodeURIComponent(id_param)}`,
           { withCredentials: true }
         );
 
-        let recipes = response.data["result"];
-        for (let recipe of recipes) {
-          if (recipe.id === Number(id_param)) {
-            this.recipe = recipe;
-          }
-        }
-
+        this.recipe = response.data.result;
         if (this.recipe !== null) {
           const instructions = this.recipe.instructions;
           const steps = instructions.split(/\d+\.\s/).filter(Boolean);
@@ -121,11 +136,11 @@ export default {
 }
 
 .container {
-  max-width: 800px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .center {
