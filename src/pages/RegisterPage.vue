@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">Register</h1>
+    <h1 class="title text-center">Register</h1><br>
     <b-form @submit.prevent="onRegister" @reset.prevent="onReset">
       <b-form-group
         id="input-group-username"
@@ -22,6 +22,9 @@
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.username.alpha">
           Username alpha
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.username.UserNameTaken">
+          Username is already taken
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -101,6 +104,9 @@
           Your password should be <strong>strong</strong>. <br />
           For that, your password should be also:
         </b-form-text>
+        <b-form-invalid-feedback v-if="$v.form.password.length && !$v.form.password.hasCharAndSpecialChar">
+          Password should include at least one alphabet character and at least one special character
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="$v.form.password.required && !$v.form.password.length"
         >
@@ -155,7 +161,7 @@
         type="submit"
         variant="primary"
         style="width:250px;"
-        class="ml-5 w-75"
+        class="ml-5 w-70"
         >Register</b-button
       >
       <div class="mt-2">
@@ -214,7 +220,8 @@ export default {
       username: {
         required,
         length: (u) => minLength(3)(u) && maxLength(8)(u),
-        alpha
+        alpha,
+        UserNameTaken: async function(u) {return await this.UserNameTaken(u)}
       },
       firstName: {
         required,
@@ -229,7 +236,8 @@ export default {
       },
       password: {
         required,
-        length: (p) => minLength(5)(p) && maxLength(10)(p)
+        length: (p) => minLength(5)(p) && maxLength(10)(p),
+        hasCharAndSpecialChar: (p) => /^(?=.*[A-Za-z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{5,10}$/.test(p),
       },
       confirmedPassword: {
         required,
@@ -247,6 +255,16 @@ export default {
     // console.log($v);
   },
   methods: {
+    async UserNameTaken(username) {
+      if (username.length < 3){return false;}
+      try {
+        const response = await this.axios.get(this.$root.store.server_domain + `/Register?username=${encodeURIComponent(username)}`);
+        return !response.data.UserNameTaken;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
     validateState(param) {
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
@@ -265,6 +283,7 @@ export default {
             email: this.form.email
           }
         );
+        this.$root.toast("Success", "The Account Has Been Successfully Created", "success");
         this.$router.push("/login");
         // console.log(response);
       } catch (err) {

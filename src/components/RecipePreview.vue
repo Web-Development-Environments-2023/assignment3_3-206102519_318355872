@@ -4,37 +4,28 @@
       <b-col>
 
         <router-link :to="{ name: name, params: { recipeId: recipe.id,favorite:recipe.favorite } }">
-          <div v-if="this.name==='MyfamilyRecipePageView'">
-          <b-card-img :src="require('@/assets/' + recipe.image)" alt="Image" class="RecipeImage" style="width: 200px; height: 200px;">
-          </b-card-img>
-          </div>
-          <div v-else>
-            <b-card-img :src="recipe.image" alt="Image" class="RecipeImage" style="width: 200px; height: 200px;"></b-card-img>
-          </div>
+            <b-card-img :src="recipe.image" alt="Image" class="RecipeImage" ></b-card-img>
         </router-link>
         <router-link :to="{ name: name, params: { recipeId: recipe.id,favorite:recipe.favorite } }">
            <b-card-title  class="RecipeTitle">{{shortenTitle(recipe.title)}}</b-card-title>
         </router-link>
-        <div class="RecipeFooter">
             <div>
-              <watchedFavoriteData class="text-left" style=" margin-right: 25%"
+              <watchedFavoriteData class="text-left" style="margin-right: 15%"
                                     :id="parseInt(this.recipe.id)"
                                     :watched="this.recipe.watched"
                                     :favorite="this.recipe.favorite">
               </watchedFavoriteData>
             <b-icon v-if="recipe.readyInMinutes" icon="clock" style="width: 15px; height: 15px;"></b-icon>
-            <a style="margin-right: 10px; margin-bottom: 20px;">  {{ recipe.readyInMinutes }} minutes</a>
+            <a style="margin-right: 10px; margin-bottom: 15px;">  {{ recipe.readyInMinutes }} minutes</a>
             <b-icon v-if="recipe.popularity>-1" icon="heart" style="width: 15px; height: 15px;"></b-icon>
-            <a style="margin-right: 10px; margin-bottom: 20px;"> {{ recipe.popularity }}</a>
+            <a style="margin-right: 10px; margin-bottom: 15px;"> {{ recipe.popularity }}</a>
           </div>
-           <div>
-            <b-badge style="margin-top: 10px;" v-if="recipe.vegan" variant="success">Vegan</b-badge>
-            <b-badge style="margin-top: 10px;" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
-            <b-badge style="margin-top: 10px;" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
-          </div>
-        </div>
-
-
+           <div id="badge">
+            <b-badge style="margin-top: 5px; margin-right: 5px" v-if="recipe.vegan" variant="success">Vegan</b-badge>
+            <b-badge style="margin-top: 5px;margin-right: 5px" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
+            <b-badge style="margin-top: 5px;margin-right: 5px" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
+             <b-badge style="margin-top: 10px;margin-right: 5px" v-else variant="warning">Have Gluten</b-badge>
+           </div>
       </b-col>
     </b-row>
   </b-card>
@@ -46,17 +37,17 @@ export default {
   components: {
    watchedFavoriteData
   },
-  // mounted() {
-  //   this.axios.get(this.recipe.image).then((i) => {
-  //     this.image_load = true;
-  //   });
-  // },
+  mounted() {
+    this.axios.get(this.recipe.image).then((i) => {
+      this.image_load = true;
+    });
+  },
   methods: {
     shortenTitle(title) {
-      if (title.length <= 30) {
+      if (title.length <= 20) {
         return title;
       } else {
-        return title.substring(0, 30) + '...';
+        return title.substring(0, 20) + '...';
       }
     }
   },
@@ -80,15 +71,6 @@ export default {
 }
 </script>
 
-
-<!--id: id,-->
-<!--title: title,-->
-<!--image: image,-->
-<!--readyInMinutes: readyInMinutes,-->
-<!--popularity: aggregateLikes,-->
-<!--vegan: vegan,-->
-<!--vegetarian: vegetarian,-->
-<!--glutenFree: glutenFree-->
 <style scoped>
 .RecipePreview {
   padding-bottom: 10px;
@@ -100,19 +82,21 @@ export default {
   margin-bottom: 10px;
 
 }
-
-
 .RecipeBody .RecipeImage {
   border-radius: 15px;
   object-fit: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;
-  background-size: cover; /* Adjust to "contain" if needed */
+  background-size: cover;
   background-position: center;
+  min-width: 100%;
+  height: 70%;
+    max-height: 200px;
 }
 
 .RecipePreview .RecipeFooter {
-  text-align: center;
+  /*text-align: center;*/
+  /*align-items: center;*/
   font-size: 14px;
 }
 
@@ -126,15 +110,14 @@ export default {
   hyphens: auto;
 }
 .zoom {
-    transition: transform .2s; /* Animation */
+    transition: transform .2s;
     transform-origin: center;
 }
 .zoom:hover {
     z-index: 4;
-    transform: scale(1.3); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    transform: scale(1.3);
 }
-.black-white {
-    color: #000;
+#badge{
+    text-align: center;
 }
-
 </style>

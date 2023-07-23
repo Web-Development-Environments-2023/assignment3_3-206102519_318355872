@@ -2,10 +2,9 @@
   <b-container>
     <h3>
       {{ title }}:
-      <slot></slot>
     </h3>
          <RecipePreviewList :recipes="recipes"></RecipePreviewList>
-         <b-button class="more align-items-center" variant="primary" v-on:click="updateRecipes">More</b-button>
+         <b-button class="more" variant="success" v-on:click="updateRecipes">More</b-button>
   </b-container>
 </template>
 
@@ -77,10 +76,11 @@ export default {
   vertical-align: middle;
 }
 .more {
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     margin-top: 2%;
-    margin-left: 44%;
+    width: 56%;
+    margin-left: 22%;
 }
 </style>

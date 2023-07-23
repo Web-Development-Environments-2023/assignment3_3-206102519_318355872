@@ -1,23 +1,23 @@
 <template>
   <div class="container" >
-    <h1 class="title">Search Page</h1>
+    <h1 class="title" style="text-align: center">Search Page</h1>
     <b-input-group class="d-flex">
       <b-form-input id="search_input"
         v-model="query"
         placeholder="Enter your Search"
         @keyup.enter="SearchRecipes(query,number)" class="w-25"
       ></b-form-input>
-        <b-button variant="outline-primary" @click="toggleDialog">Filter</b-button>
-      <b-dropdown :text="orderBy" variant="outline-primary">
+        <b-button variant="outline-success" @click="toggleDialog">Filter</b-button>
+      <b-dropdown :text="orderBy" variant="outline-success">
         <b-dropdown-item @click="changeParameter('readyInMinutes')">readyInMinutes</b-dropdown-item>
         <b-dropdown-item @click="changeParameter('popularity')">popularity</b-dropdown-item>
       </b-dropdown>
-        <b-dropdown :text="dropdownText" variant="outline-primary">
+        <b-dropdown :text="dropdownText" variant="outline-success">
           <b-dropdown-item @click="selectAmount(5)">5</b-dropdown-item>
           <b-dropdown-item @click="selectAmount(10)">10</b-dropdown-item>
           <b-dropdown-item @click="selectAmount(15)">15</b-dropdown-item>
         </b-dropdown>
-        <b-button variant="outline-primary" @click="SearchRecipes(query,number)">
+        <b-button variant="outline-success" @click="SearchRecipes(query,number)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
             </svg>
@@ -53,16 +53,12 @@
               </li>
             </b-col>
           </b-row>
-          <b-button @click="reset_options" variant="outline-primary" >Reset</b-button>
+          <b-button @click="reset_options" variant="outline-success" >Reset</b-button>
         </ul>
       </div>
     </div>
     <div class="mt-3">
       <b-container>
-        <h3>
-          {{ "Recipes" }}:
-          <slot></slot>
-        </h3>
         <b-row id="waiting_animation" md="6" class="mb-3 d-flex justify-content-center" :class="{ hidden: isHidden, reveal: !isHidden }" :style="{ display: displayStyle }" >
           <b-icon icon="arrow-clockwise" animation="spin" font-scale="10" :style="{ display: displayStyle } "></b-icon>
         </b-row>
@@ -142,7 +138,7 @@ export default {
       filter_change: false,
       order_by_bool: false,
       parameter: 'popularity',
-      amount_changed: false
+      amount_changed: true,
     }
   },
   computed: {
@@ -196,14 +192,19 @@ export default {
       return chunk_back
     },
     orderBy(){
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.order_by_bool = true;
       return 'OrderBy: ' + this.parameter
     },
   },
 
   methods: {
     changeParameter(parameter){
+      if(parameter !== this.parameter)
+      {
+        this.order_by_bool = true;
+      }
+      else {
+        this.order_by_bool = true;
+      }
       this.parameter = parameter;
     },
     handleOptionChange(selectedOption, listOptions) {
@@ -261,11 +262,11 @@ export default {
     },
     showWatingAnimation() {
       this.toggleAnimation()
-      this.displayStyle = 'block'; // set display to 'block' to show the element
+      this.displayStyle = 'block';
     },
     hideWatingAnimation() {
       this.toggleAnimation()
-      this.displayStyle = 'none'; // set display to 'none' to hide the element
+      this.displayStyle = 'none';
     },
     async SearchRecipes(query,number) {
       try {
@@ -344,10 +345,11 @@ export default {
 
 }
 .recipePreview {
+  display: block;
   margin-left: 40px;
   align-items: center;
-  width: 300px; /* Adjust the width as needed */
-  height: auto; /* Adjust the height as needed */
+  width: 300px;
+  height: 300px;
   margin-bottom: 50px;
 }
 .input-group>.input-group-prepend {

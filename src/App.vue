@@ -14,19 +14,20 @@
             <router-link :to="{ name: 'register' }">Register</router-link>
           </span>
           <span v-else class="nav-item">
-            <b-button variant="primary" @click="showModal">Add Recipe</b-button>
-            <b-nav-item-dropdown :text="$root.store.username" left>
+            <b-button  variant="outline-success" @click="showModal">Add Recipe</b-button>
+            <b-nav-item-dropdown :text="$root.store.username" left style="font-size: 100%">
               <b-dropdown-item href="#"><router-link :to="{ name: 'my_favorite_recipes' }">My favorite recipes</router-link></b-dropdown-item>
               <b-dropdown-item href="#"><router-link :to="{ name: 'my_recipes' }">My recipes</router-link></b-dropdown-item>
               <b-dropdown-item href="#"><router-link :to="{ name: 'my_family_recipes' }">My family recipes</router-link></b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-button class="button-4" variant="primary"  @click="Logout">Logout</b-button>
+            <b-button class="button-4" variant="outline-success" @click="Logout">Logout</b-button>
           </span>
         </b-navbar-nav>
       </b-navbar>
       <router-view />
     </div>
-    <div>
+    <img id="BackGround_IMG" src="../src/assets/Background.jpg">
+    <div class="modal-content">
       <b-modal class="add_recipe"  ref="my-modal" hide-footer title="Add Personal Recipe" size="lg">
         <b-form-group  label-cols="4" label-cols-lg="2" label-size="me" label="Title" label-for="Title" >
           <b-form-input v-model="recipe.title"  size="me" required placeholder="Enter the Name of the recipe">
@@ -53,25 +54,25 @@
           <b-form-group label-cols="4" label-cols-lg="2" label-size="me" label="Extended Ingredients">
             <div v-for="(ingredient, index) in ingredients" :key="index">
               <b-form-input v-model="ingredients[index]" size="me"></b-form-input>
-              <b-button @click="removeIngredient(index)" variant="danger">-</b-button>
+              <b-button @click="removeIngredient(index)" variant="outline-danger">-</b-button>
             </div>
-            <b-button @click="addIngredient" variant="success">+</b-button>
+            <b-button @click="addIngredient" variant="outline-success">+</b-button>
             <b-input  hidden v-model="recipe.extendedIngredients" :value="joinedIngredients"></b-input>
           </b-form-group>
         <b-form-group label-cols="4" label-cols-lg="2" label-size="me" label="instructions">
           <div v-for="(instruct, index) in instructions_list" :key="index">
             <b-form-input v-model="instructions_list[index]" size="me"></b-form-input>
-            <b-button @click="removeInstruct(index)" variant="danger">-</b-button>
+            <b-button @click="removeInstruct(index)" variant="outline-danger">-</b-button>
           </div>
-          <b-button @click="addInstruct" variant="success">+</b-button>
+          <b-button @click="addInstruct" variant="outline-success">+</b-button>
           <b-input  hidden v-model="recipe.instructions" :value="joinedInstruction"></b-input>
         </b-form-group>
         <b-row class="mt-3 justify-content-center">
           <b-col cols="1">
-            <b-button variant="primary" type="submit" @click="addRecipe">Add</b-button>
+            <b-button variant="outline-success" type="submit" @click="addRecipe">Add</b-button>
           </b-col>
           <b-col cols="1">
-            <b-button variant="primary" @click="closeModal">Cancel</b-button>
+            <b-button variant="outline-danger" @click="closeModal">Cancel</b-button>
           </b-col>
         </b-row>
       </b-modal>
@@ -163,6 +164,8 @@ export default {
         if (response.status === 201) {
           this.closeModal();
           this.$root.toast("Success", "Recipe added successfully", "success");
+          this.$root.store.recipeAdded = true;
+
         } else {
           console.log(response);
           this.$root.toast("Error", "Failed to add recipe", "error");
@@ -198,10 +201,10 @@ export default {
 @import "@/scss/form-style.scss";
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  font-family: 'DynaPuff', cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- 
 }
 
 
@@ -212,77 +215,23 @@ export default {
 
 #nav a {
   font-weight: bold;
-  color: rgb(0, 0, 0);
+  color: rgba(0, 0, 0, 0.87);
   width: 100%;
-
 }
 
 #nav a.router-link-exact-active {
-  color: rgb(0, 0, 0);
+  color: black;
   width: 100%;
 }
 
-.button-4 {
- appearance: none;
- background-color: #FAFBFC;
- border: 1px solid rgba(27, 31, 35, 0.15);
- border-radius: 6px;
- box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
- box-sizing: border-box;
- color: #24292E;
- cursor: pointer;
- display: inline-block;
- font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
- font-size: 14px;
- font-weight: 500;
- line-height: 20px;
- list-style: none;
- padding: 6px 16px;
- position: relative;
- transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
- user-select: none;
- -webkit-user-select: none;
- touch-action: manipulation;
- vertical-align: middle;
- white-space: nowrap;
- word-wrap: break-word;
-}
-
-.button-4:hover {
-  background-color: #F3F4F6;
-  text-decoration: none;
-  transition-duration: 0.1s;
-}
-
-.button-4:disabled {
-  background-color: #FAFBFC;
-  border-color: rgba(27, 31, 35, 0.15);
-  color: #959DA5;
-  cursor: default;
-}
-
-.button-4:active {
-  background-color: #EDEFF2;
-  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
-  transition: none 0s;
-}
-
-.button-4:focus {
-  outline: 1px transparent;
-}
-
-.button-4:before {
-  display: none;
-}
-
-.button-4::-webkit-details-marker {
-  display: none;
-}
 .nav-item {
+  text-shadow: rgb(255, 255, 255) 0 0 20px;
   align-items: center;
   justify-content: flex-end;
   display: inline-block;
   vertical-align: middle;
+  font-size: 150%;
+
 }
 
 .nav-item > * {
@@ -292,5 +241,36 @@ export default {
 .add_recipe b-form-input{
   width: 50px;
 }
+#BackGround_IMG{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -30;
+  opacity: 0.7;
+}
+/** Font Import For Titles **/
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&display=swap');
+h1 ,.title{
+  font-family: 'DynaPuff', cursive;
+  font-size: 350%;
+  text-shadow: azure 0 0 40px;
+}
+.modal-content {
+  font-family: 'DynaPuff', cursive;
+}
 
+.modal-content h1 {
+  text-align: center;
+  align-items: center;
+  font-family: 'DynaPuff', cursive;
+}
+img{
+  border-radius:15px;
+}
+.img-page{
+  max-width: 500px;
+  max-height: 300px;
+}
 </style>

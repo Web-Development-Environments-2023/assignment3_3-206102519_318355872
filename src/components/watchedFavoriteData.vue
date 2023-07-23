@@ -4,10 +4,10 @@
                   v-b-popover.hover.top="'You not watched this recipe'"/>
         <b-icon-check-circle-fill v-if="watched===true" class="b-icon-data zoom zoom-icon" style="color:#3de18c"
              v-b-popover.hover.top="'You had watched this recipe '"/>
-        <b-icon-hand-thumbs-up v-if="favorite===false" class="b-icon-data zoom zoom-icon"
+        <b-icon-hand-thumbs-up v-if="favorite===false" class="b-icon-data zoom zoom-icon cursor-pointer"
               v-b-popover.hover.top="'click to add the recipe to your favorites'"
-              v-on:click="addRecipeToFavorites"/>
-        <b-icon-hand-thumbs-up class="b-icon-data zoom zoom-icon" style=" color: rgb(61, 225, 140); text-shadow: rgb(220, 219, 219) 10px 0px 13.3px;" v-if="favorite===true"
+              v-on:click="addRecipeToFavorites" />
+        <b-icon-hand-thumbs-up class="b-icon-data zoom zoom-icon cursor-pointer" style=" color: rgb(61, 225, 140); text-shadow: rgb(220, 219, 219) 10px 0px 13.3px;" v-if="favorite===true"
               v-b-popover.hover.top="'This recipe is in your favorites list'" />
     </a>
     <a v-else>
@@ -79,6 +79,9 @@ export default {
 .zoom-effect:hover .zoom-icon {
     transform: scale(1.2); /* Increase the scale value for a stronger zoom effect */
     z-index: 3;
+}
+.cursor-pointer {
+    cursor: pointer;
 }
 
 </style>

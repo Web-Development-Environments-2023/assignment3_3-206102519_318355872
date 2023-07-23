@@ -18,7 +18,7 @@
       <li>View Your Family Recipes: Access and enjoy the recipes shared by your family within the platform.</li>
     </ul>
     <b>Founders:</b>
-    <br><u>Itamar Zafran - ID:</u> 318355812 <u>Mail:</u> Zafran@post.bgu.ac.il
+    <br><u>Itamar Zafran - ID:</u> 318355872 <u>Mail:</u> Zafran@post.bgu.ac.il
     <br><u>Nitay Yakoby   - ID:</u> 206102519 <u>Mail:</u> Yakoby@post.bgu.ac.il
 
     <br><b>Last Projects GitHub:</b>

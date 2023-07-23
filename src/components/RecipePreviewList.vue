@@ -36,10 +36,11 @@ export default {
   min-height: 400px;
 }
 .recipePreview {
-  width: 60%;
-  height: 100%;
-  display: table-cell;
+  display: block;
+  width: 300px;
+  height: 300px;
   margin: 10px auto;
   vertical-align: middle;
+
 }
 </style>

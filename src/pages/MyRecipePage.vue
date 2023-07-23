@@ -6,7 +6,7 @@
         <b-row id="waiting_animation" md="6" class="mb-3 d-flex justify-content-center" :class="{ hidden: isHidden, reveal: !isHidden }" :style="{ display: displayStyle }" >
           <b-icon icon="arrow-clockwise" animation="spin" font-scale="10" :style="{ display: displayStyle } "></b-icon>
         </b-row>
-        <b-row v-if="chunkedRecipes.length > 0 ">
+        <b-row v-if="chunkedRecipes.length > 0  && newRecipe">
           <b-row v-for="(row, rowIndex) in chunkedRecipes" :key="rowIndex">
             <b-col v-for="recipe in row" :key="recipe.id">
               <RecipePreview class="recipePreview" :recipe="recipe" name="MyRecipePageView" />
@@ -40,6 +40,15 @@ export default {
     };
   },
   computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    newRecipe(){
+      if(this.$root.store.recipeAdded){
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.$root.store.recipeAdded = false;
+        this.SearchRecipes();
+      }
+      return true;
+    },
     chunkedRecipes() {
       let chunk_back;
       chunk_back = this.recipes.reduce((result, item, index) => {
@@ -89,7 +98,7 @@ export default {
   mounted() {
     this.SearchRecipes();
   }
-};
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -110,10 +119,11 @@ export default {
 
 }
 .recipePreview {
+  display: block;
   margin-left: 40px;
   align-items: center;
-  width: 300px; /* Adjust the width as needed */
-  height: auto; /* Adjust the height as needed */
+  width: 300px;
+  height: 300px;
   margin-bottom: 50px;
 }
 </style>

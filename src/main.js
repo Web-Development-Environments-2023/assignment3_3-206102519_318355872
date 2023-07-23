@@ -77,6 +77,7 @@ const shared_data = {
   server_domain : "http://127.0.0.1:3000",
   username: localStorage.username,
   LastSearchRecipes: [],
+  recipeAdded: false,
   login: function(username) {
     localStorage.setItem("username", username);
     this.username = username;
