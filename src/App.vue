@@ -201,6 +201,7 @@ export default {
 @import "@/scss/form-style.scss";
 
 #app {
+  min-height: 100vh;
   font-family: 'DynaPuff', cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

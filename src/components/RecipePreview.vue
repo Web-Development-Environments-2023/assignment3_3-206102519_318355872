@@ -24,7 +24,8 @@
             <b-badge style="margin-top: 5px; margin-right: 5px" v-if="recipe.vegan" variant="success">Vegan</b-badge>
             <b-badge style="margin-top: 5px;margin-right: 5px" v-if="recipe.vegetarian" variant="success">Vegetarian</b-badge>
             <b-badge style="margin-top: 5px;margin-right: 5px" v-if="recipe.glutenFree" variant="success">Gluten free</b-badge>
-          </div>
+             <b-badge style="margin-top: 10px;margin-right: 5px" v-else variant="warning">Have Gluten</b-badge>
+           </div>
       </b-col>
     </b-row>
   </b-card>
