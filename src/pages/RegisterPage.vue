@@ -256,7 +256,7 @@ export default {
   },
   methods: {
     async UserNameTaken(username) {
-      if (username.length < 3){return false;}
+      if (username.length < 3){return true;}
       try {
         const response = await this.axios.get(this.$root.store.server_domain + `/Register?username=${encodeURIComponent(username)}`);
         return !response.data.UserNameTaken;
