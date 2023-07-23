@@ -62,7 +62,7 @@
         <b-row id="waiting_animation" md="6" class="mb-3 d-flex justify-content-center" :class="{ hidden: isHidden, reveal: !isHidden }" :style="{ display: displayStyle }" >
           <b-icon icon="arrow-clockwise" animation="spin" font-scale="10" :style="{ display: displayStyle } "></b-icon>
         </b-row>
-        <b-row v-if="chunkedRecipes.length > 0 && !order_by_bool">
+        <b-row v-if="chunkedRecipes.length > 0">
           <b-row v-for="(row, rowIndex) in chunkedRecipes" :key="rowIndex">
             <b-col v-for="recipe in row" :key="recipe.id">
               <RecipePreview class="recipePreview" :recipe="recipe" name="recipe" />
@@ -139,6 +139,7 @@ export default {
       order_by_bool: false,
       parameter: 'popularity',
       amount_changed: true,
+      counter :0,
     }
   },
   computed: {
@@ -153,6 +154,7 @@ export default {
         return "Amount (5)";
       }
     },
+    // eslint-disable-next-line vue/no-async-in-computed-properties
     chunkedRecipes() {
       if (!this.order_by_bool){
         if (!this.SearchWasClicked){
@@ -167,16 +169,16 @@ export default {
       let chunk_back;
       if (this.recipes.length === 0) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.recipes = this.$root.store.LastSearchRecipes
-      };
+        this.recipes = [].concat(...this.$root.store.LastSearchRecipes);
+      }
+      ;
       if (this.parameter === 'popularity') {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.recipes = this.recipes.sort((a, b) =>  b[this.parameter] - a[this.parameter])
+        this.recipes = this.recipes.sort((a, b) => b[this.parameter] - a[this.parameter])
 
-      }
-      else {
+      } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.recipes = this.recipes.sort((a, b) =>  a[this.parameter] - b[this.parameter])
+        this.recipes = this.recipes.sort((a, b) => a[this.parameter] - b[this.parameter])
 
       }
       chunk_back = this.recipes.reduce((result, item, index) => {
